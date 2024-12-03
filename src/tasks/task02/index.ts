@@ -1,4 +1,4 @@
-import { all, any, both, compose, curry, either, filter, head, length, map, pipe, slice, split, tail, tap, trim, zip } from 'ramda';
+import { any, compose, curry, either, filter, length, map, pipe, split, trim, zip } from 'ramda';
 import { parseInput } from '../../utils/input';
 
 type Pair = [number, number];
