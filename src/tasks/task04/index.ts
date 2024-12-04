@@ -1,28 +1,55 @@
-import { map, nth, reverse, split } from 'ramda';
-import { parseInput } from '../../utils/input';
+import { map, split } from "ramda";
+import { parseInput } from "../../utils/input";
 
 type Grid = string[][];
 
-const getWays = (word: string) => (grid: Grid, y: number, x: number) => {
-    const directions = [[1, 0], [-1, 0], [0, 1], [0, -1], [-1, -1], [-1, 1], [1, -1], [1, 1]];
-    const size = word.length;
+function getWordCount(word: string) {
+    return (grid: Grid, y: number, x: number): number => {
+        const directions = [
+            [1, 0], [-1, 0], [0, 1], [0, -1],
+            [-1, -1], [-1, 1], [1, -1], [1, 1]
+        ];
+        let count = 0;
 
-    const nextStep = (currWord: string, y: number, x: number) => {
-        const nextLetters = directions
-            .map(([dy, dx]) => [y + dy, x + dx])
-            .filter(([newY, newX]) => newY >= 0 && newY < grid.length && newX >= 0 && newX < grid[0].length)
-            .filter(([newY, newX]) => word.startsWith(currWord + grid[newY][newX]));
+        function checkDirection([dy, dx]: number[]): void {
+            let currWord = grid[y][x];
+            let currY = y;
+            let currX = x;
 
-        return nextLetters.length + nextStep(currWord + )
-    }
+            for (let i = 1; i < word.length; i++) {
+                currY += dy;
+                currX += dx;
 
-    return nextStep("", y, x)
+                if (
+                    currY < 0 || currY >= grid.length ||
+                    currX < 0 || currX >= grid[0].length
+                ) {
+                    return;
+                }
+
+                currWord += grid[currY][currX];
+                if (!word.startsWith(currWord)) {
+                    return;
+                }
+            }
+
+            if (currWord === word) {
+                count++;
+            }
+        }
+
+        directions.forEach(checkDirection);
+        return count;
+    };
 }
 
-// const lines = parseInput("./src/tasks/task04", "./input.txt");
-const lines = parseInput("./src/tasks/task04", "./example.txt");
+const lines = parseInput("./src/tasks/task04", "./input.txt");
+// const lines = parseInput("./src/tasks/task04", "./example.txt");
 const grid = map(split(""))(lines);
 
+
+// part 1
+let totalCount = 0;
 for (let i = 0; i < grid.length; i++) {
     const line = grid[i];
     for (let j = 0; j < line.length; j++) {
@@ -30,8 +57,47 @@ for (let i = 0; i < grid.length; i++) {
             continue;
         }
 
-        const directions = getWays(4)(grid, i, j);
+        const count = getWordCount("XMAS")(grid, i, j);
+        totalCount += count;
     }
 }
 
-console.log(allStrings);
+console.log(totalCount);
+
+// part 2
+function isXmasSign(grid: Grid, y: number, x: number): boolean {
+    // Check if we can form a complete X pattern
+    if (y === 0 || y === grid.length - 1 || x === 0 || x === grid[0].length - 1) {
+        return false; // Can't form X if A is on the edge
+    }
+
+    let topLeft = grid[y-1][x-1];
+    let topRight = grid[y-1][x+1];
+    let bottomLeft = grid[y+1][x-1];
+    let bottomRight = grid[y+1][x+1];
+
+    // Check diagonal \ then diagonal /
+    return (
+        ((topLeft === "M" && bottomRight === "S") ||
+        (topLeft === "S" && bottomRight === "M")) &&
+        ((topRight === "M" && bottomLeft === "S") ||
+        (topRight === "S" && bottomLeft === "M"))
+    );
+}
+
+let xmasSignCount = 0;
+
+for (let i = 0; i < grid.length; i++) {
+    const line = grid[i];
+    for (let j = 0; j < line.length; j++) {
+        if (line[j] !== "A") {
+            continue;
+        }
+
+        if (isXmasSign(grid, i, j)) {
+            xmasSignCount++;
+        }
+    }
+}
+
+console.log(xmasSignCount);
