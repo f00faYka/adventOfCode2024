@@ -1,5 +1,5 @@
 import { map, split } from "ramda";
-import { parseInput } from "../../utils/input";
+import { readFileStrings } from "../../utils/input";
 
 type Grid = string[][];
 
@@ -43,7 +43,7 @@ function getWordCount(word: string) {
     };
 }
 
-const lines = parseInput("./src/tasks/task04", "./input.txt");
+const lines = readFileStrings("./src/tasks/task04", "./input.txt");
 // const lines = parseInput("./src/tasks/task04", "./example.txt");
 const grid = map(split(""))(lines);
 

@@ -1,5 +1,5 @@
 import { evolve, map, pipe, reduce, sort, split, trim, zipWith, props, apply, add, curry, tap, toPairs } from 'ramda';
-import { parseInput } from '../../utils/input';
+import { readFileStrings } from '../../utils/input';
 
 type NumberArrays = {
     left: number[];
@@ -36,7 +36,7 @@ const calculateSum = pipe(
 );
 
 const getSum = pipe(
-    parseInput,
+    readFileStrings,
     parseInputIntoArrays,
     getSortedArrays,
     calculateSum
@@ -60,7 +60,7 @@ const calculateSimilarity = pipe(
 );
 
 const getSimilarityScore = pipe(
-    parseInput,
+    readFileStrings,
     parseInputIntoArrays,
     evolve({
         right: getHash,

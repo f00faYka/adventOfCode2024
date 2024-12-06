@@ -1,7 +1,7 @@
 import { join, map, match, pipe, sum } from 'ramda';
-import { parseInputRaw } from '../../utils/input';
+import { readFileRaw } from '../../utils/input';
 
-const rawString = parseInputRaw("./src/tasks/task03", "./input.txt");
+const rawString = readFileRaw("./src/tasks/task03", "./input.txt");
 type Pair = [number, number];
 
 const multiply = ([a, b]: Pair) => a * b;

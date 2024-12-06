@@ -1,5 +1,5 @@
 import { any, compose, curry, either, filter, length, map, pipe, split, trim, zip } from 'ramda';
-import { parseInput } from '../../utils/input';
+import { readFileStrings } from '../../utils/input';
 
 type Pair = [number, number];
 
@@ -10,7 +10,7 @@ const parseLine = pipe(
 ) as () => number[];
 
 const parseInputIntoArrays = pipe(
-    parseInput,
+    readFileStrings,
     map(parseLine),
 );
 
