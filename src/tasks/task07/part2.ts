@@ -1,7 +1,7 @@
 import { filter, map, reduce, repeat, split, sum, trim } from 'ramda';
 import { readFileStrings } from '../../utils/input';
 
-type Operator = '+' | '*';
+type Operator = '+' | '*' | "||";
 type Equation = [number, number[]];
 type OperationFunctions = {
     [key in Operator]: (a: number, b: number) => number;
@@ -10,6 +10,7 @@ type OperationFunctions = {
 const operationFunctions: OperationFunctions = {
     '+': (a, b) => a + b,
     '*': (a, b) => a * b,
+    '||': (a, b) => Number(`${a}${b}`),
 };
 
 const getFn = (operator: Operator): OperationFunctions[Operator] => {
@@ -33,12 +34,20 @@ const calcEq = (operators: Operator[], numbers: number[]) => {
 }
 
 const getNextOperators = (operators: Operator[]) => {
+    const operatorOrder: Operator[] = ['+', '*', '||'];
+
     for (let i = operators.length - 1; i >= 0; i--) {
-        if (operators[i] === "+") {
-            const left = operators.slice(0, i);
-            const right = repeat("+", operators.length - i - 1);
-            return [...left, "*", ...right] as Operator[];
+        const currentOp = operators[i];
+        const currentIndex = operatorOrder.indexOf(currentOp);
+
+        if (currentIndex >= operatorOrder.length - 1) {
+            continue;
         }
+
+        const left = operators.slice(0, i);
+        const nextOperator = operatorOrder[currentIndex + 1];
+        const right = repeat('+', operators.length - i - 1);
+        return [...left, nextOperator, ...right] as Operator[];
     }
     return [];
 }
@@ -69,8 +78,8 @@ const hasSolution = (equation: Equation) => {
     return false;
 };
 
-const input = readFileStrings(__dirname, 'example.txt');
-// const input = readFileStrings(__dirname, 'input.txt');
+// const input = readFileStrings(__dirname, 'example.txt');
+const input = readFileStrings(__dirname, 'input.txt');
 
 const equations: Equation[] = map(parseEquation)(input);
 
@@ -82,3 +91,8 @@ console.log(solvableEquations)
 const sumOfSolvableResults = sum(map(([result, _]) => result)(solvableEquations));
 
 console.log(sumOfSolvableResults);
+
+
+// part 2
+
+const newSolvableEquations = filter(hasSolution)(equations);
