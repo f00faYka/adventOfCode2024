@@ -46,5 +46,4 @@ const checksum = diskData.reduce((sum, block, idx) => {
 
 
 console.log(checksum);
-
-
+// 6283404590840

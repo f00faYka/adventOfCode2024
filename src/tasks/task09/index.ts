@@ -35,8 +35,8 @@ const buildSpaces = (diskRaw: string): Space[] => {
     }));
 }
 
-const diskRaw = readFileRaw(__dirname, "./example.txt");
-// const diskRaw = readFileRaw(__dirname, "./input.txt");
+// const diskRaw = readFileRaw(__dirname, "./example.txt");
+const diskRaw = readFileRaw(__dirname, "./input.txt");
 
 const files = buildFiles(diskRaw);
 
@@ -69,8 +69,8 @@ console.log(files);
 
 const compactedDisk: (number | string)[] = [];
 
-files.forEach((file) => {
-    const currentSpace = spaces.find((space) => space.files.includes(file)) || { files: [], length: 0 };
+files.forEach((file, idx) => {
+    const currentSpace = spaces[idx] || { files: [], length: 0 };
 
     if (file.moved) {
         // Process files already moved to currentSpace
@@ -100,3 +100,8 @@ const checksum = compactedDisk.reduce((sum, block, idx) => {
 }, 0);
 
 console.log("Checksum:", checksum);
+
+// 6304576712958 too high
+// 9480767198 not correct
+// 6283404590840 not correct
+// 6304576012713 correct
