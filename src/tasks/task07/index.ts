@@ -1,4 +1,4 @@
-import { filter, map, reduce, repeat, split, sum, trim } from 'ramda';
+import { filter, map, repeat, split, sum, trim } from 'ramda';
 import { readFileStrings } from '../../utils/input';
 
 type Operator = '+' | '*';
