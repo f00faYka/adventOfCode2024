@@ -1,4 +1,4 @@
-import { any, forEach, map, pipe, reduce, split, sum } from "ramda";
+import { chain, forEach, map, reduce, split, sum } from "ramda";
 import { readFileStrings } from "../../utils/input";
 
 type Grid = string[][];
@@ -57,7 +57,7 @@ const createGetTrailHeadScore = (grid: Grid, directions: Point[]) => ([y, x]: Po
         }
 
         const neighbors = getNeighbors([y, x]);
-        neighbors.forEach(neighbor => findReachableNines(neighbor, visited));
+        forEach<Point>(neighbor => findReachableNines(neighbor, visited))(neighbors);
 
         return visited;
     }
@@ -68,6 +68,18 @@ const createGetTrailHeadScore = (grid: Grid, directions: Point[]) => ([y, x]: Po
         .from(reachableNines)
         .filter(key => grid[+key.split(",")[0]][+key.split(",")[1]] === "9")
         .length;
+}
+
+const getIndices = <T>(array: T[]) => [...Array(array.length).keys()];
+
+const getStartPoints = (grid: Grid) => {
+    const rowIndices = getIndices(grid);
+    const colIndices = getIndices(grid[0]);
+
+    const isEqualToZero = ([y, x]: Point) => grid[y][x] === "0";
+
+    return chain(y => map(x => [y, x] as Point, colIndices), rowIndices)
+        .filter(isEqualToZero)
 }
 
 const main = () => {
@@ -82,33 +94,17 @@ const main = () => {
         [1, 0]   // bottom
     ];
 
+    const startPoints = getStartPoints(grid);
+
     // part 1
-
     const getTrailHeadScore = createGetTrailHeadScore(grid, directions);
+    const trailHeadsScore = sum(map(getTrailHeadScore)(startPoints));
 
-    let trailHeadsScore = 0;
-    for (let y = 0; y < grid.length; y++) {
-        const line = grid[y];
-        for (let x = 0; x < line.length; x++) {
-            if (line[x] === "0") {
-                trailHeadsScore += getTrailHeadScore([y, x]);
-            }
-        }
-    }
-    console.log("TrailHeads: ", trailHeadsScore);
+    console.log("TrailHeadsScore: ", trailHeadsScore);
 
     // part 2
     const getUniqueTrailCount = createGetUniqueTrailsCount(grid, directions);
-    // rework this approach to map(map())
-    let uniqueTrailsCount = 0;
-    for (let y = 0; y < grid.length; y++) {
-        const line = grid[y];
-        for (let x = 0; x < line.length; x++) {
-            if (line[x] === "0") {
-                uniqueTrailsCount += getUniqueTrailCount([y, x]);
-            }
-        }
-    }
+    const uniqueTrailsCount = sum(map(getUniqueTrailCount)(startPoints));
 
     console.log("Unique trails: ", uniqueTrailsCount);
 }
