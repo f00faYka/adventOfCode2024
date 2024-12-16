@@ -1,18 +1,14 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { pipe, split, trim } from 'ramda';
 
-export const readFileStrings = (taskDir: string, filename: string): string[] => {
+export const readFileStrings = async (filename: string): Promise<string[]> => {
+    const text = await Deno.readTextFile(filename);
     return pipe(
-        (path: string) => readFileSync(path, 'utf-8'),
         trim,
         split('\n')
-    )(join(taskDir, filename));
+    )(text);
 };
 
-export const readFileRaw = (taskDir: string, filename: string): string => {
-    return pipe(
-        (path: string) => readFileSync(path, 'utf-8'),
-        trim
-    )(join(taskDir, filename));
+export const readFileRaw = async (filename: string): Promise<string> => {
+    const text = await Deno.readTextFile(filename);
+    return trim(text);
 };

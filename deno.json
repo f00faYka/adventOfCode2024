@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "allowJs": true,
+    "lib": ["deno.window"],
+    "outDir": "./dist"
+  },
+  "tasks": {
+    "start": "deno run --allow-read src/runner.ts",
+    "test": "deno test"
+  },
+  "imports": {
+    "ramda": "npm:ramda@0.29.1",
+    "ramda/": "npm:/ramda@0.29.1/"
+  },
+  "fmt": {
+    "indentWidth": 4,
+    "singleQuote": true,
+    "semiColons": true
+  }
+} 

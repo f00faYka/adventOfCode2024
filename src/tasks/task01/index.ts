@@ -35,12 +35,14 @@ const calculateSum = pipe(
     reduce(add, 0)
 );
 
-const getSum = pipe(
-    readFileStrings,
-    parseInputIntoArrays,
-    getSortedArrays,
-    calculateSum
-);
+const getSum = async (dir: string, filename: string): Promise<number> => {
+    const lines = await readFileStrings(filename);
+    return pipe(
+        parseInputIntoArrays,
+        getSortedArrays,
+        calculateSum
+    )(lines);
+};
 
 const getHash = curry(
     reduce<number, Record<number, number>>((acc, cur) => ({
@@ -59,23 +61,28 @@ const calculateSimilarity = pipe(
     )(left)
 );
 
-const getSimilarityScore = pipe(
-    readFileStrings,
-    parseInputIntoArrays,
-    evolve({
-        right: getHash,
-    }),
-    tap(x => console.log(x)),
-    calculateSimilarity,
-)
-
-export const part1 = (): number => {
-    return getSum("./src/tasks/task01", "./input.txt");
-};
-
-export const part2 = (): number => {
-    return getSimilarityScore("./src/tasks/task01", "./input.txt");
+const getSimilarityScore = async (dir: string, filename: string): Promise<number> => {
+    const lines = await readFileStrings(filename);
+    return pipe(
+        parseInputIntoArrays,
+        evolve({
+            right: getHash,
+        }),
+        calculateSimilarity,
+    )(lines);
 }
 
-console.log(part1());
-console.log(part2());
+export const part1 = async (): Promise<number> => {
+    return await getSum("./src/tasks/task01", "./input.txt");
+};
+
+export const part2 = async (): Promise<number> => {
+    return await getSimilarityScore("./src/tasks/task01", "./input.txt");
+}
+
+// Для запуска используйте:
+// const main = async () => {
+//     console.log(await part1());
+//     console.log(await part2());
+// }
+// main();
