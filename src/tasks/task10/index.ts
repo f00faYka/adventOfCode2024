@@ -1,5 +1,5 @@
 import { chain, forEach, map, reduce, split, sum } from "ramda";
-import { readFileStrings } from "../../utils/input";
+import { readFileStrings } from "../../utils/input.ts";
 
 type Grid = string[][];
 
@@ -82,9 +82,9 @@ const getStartPoints = (grid: Grid) => {
         .filter(isEqualToZero)
 }
 
-const main = () => {
+const main = async () => {
     // const lines = readFileStrings(__dirname, "./input.txt");
-    const lines = readFileStrings(__dirname, "./example.txt");
+    const lines = await readFileStrings("./input.txt");
     const grid: Grid = map(split(""))(lines);
 
     const directions: Point[] = [
