@@ -1,4 +1,118 @@
-import { readFileStrings } from "../../utils/input.ts";
+import { readFileStrings } from "../../utils/input";
+
+type Grid = string[][];
+type Point = [number, number];
+type Memo = Record<string, number>;
+
+const DIRECTIONS: Point[] = [
+    [0, 1],
+    [1, 0],
+    [0, -1],
+    [-1, 0]
+];
+
+const DIRECTION_SYMBOLS: Record<string, string> = {
+    "0,1": ">",
+    "1,0": "v",
+    "0,-1": "<",
+    "-1,0": "^"
+};
+
+const createIsWall = (grid: Grid) => ([y, x]: Point): boolean => {
+    return grid[y][x] === "#";
+};
+
+const createIsStartPoint = (grid: Grid) => ([y, x]: Point): boolean => {
+    return grid[y][x] === "S";
+};
+
+const createIsEndPoint = (grid: Grid) => ([y, x]: Point): boolean => {
+    return grid[y][x] === "E";
+};
+
+const findStartPoint = (grid: Grid) => {
+    const isStartPoint = createIsStartPoint(grid);
+    const points = grid.flatMap((row, y) =>
+        row.map((_, x) => [y, x] as Point)
+    );
+    return points.find(isStartPoint) || null;
+};
+
+const getNeighbors = (grid: Grid) => ([y, x]: Point): Point[] => {
+    return DIRECTIONS
+        .map(([dy, dx]) => [y + dy, x + dx] as Point)
+        .filter(([y, x]) => !createIsWall(grid)([y, x]));
+};
+
+function calculateDirectionChangeCost(currentDirection: Point, newDirection: Point): number {
+    const isSameDirection = currentDirection[0] === newDirection[0] && currentDirection[1] === newDirection[1];
+    return isSameDirection ? 0 : 1000;
+}
+
+function findCheapestPath(grid: Grid) {
+    const isEndPoint = createIsEndPoint(grid);
+    const startPoint = findStartPoint(grid);
+
+    if (!startPoint) {
+        throw new Error("Start point not found");
+    }
+
+    const memo: Memo = {};
+    const visited: Set<string> = new Set();
+
+    const calculateCost = ([y, x]: Point, [dy, dx]: Point): number => {
+        const stateKey = `${y},${x},${dy},${dx}`;
+        if (memo[stateKey] !== undefined) {
+            return memo[stateKey];
+        }
+
+        // If this is the end point, cost is 0
+        if (isEndPoint([y, x])) {
+            return (memo[stateKey] = 0);
+        }
+
+        // Prevent revisiting the same state
+        if (visited.has(stateKey)) {
+            return Infinity;
+        }
+        visited.add(stateKey);
+
+        // Get valid neighbors
+        const neighbors = getNeighbors(grid)([y, x]);
+        if (neighbors.length === 0) {
+            visited.delete(stateKey); // Backtrack
+            return (memo[stateKey] = Infinity);
+        }
+
+        // Compute costs for each neighbor
+        const costs = neighbors.map(([ny, nx]) => {
+            const newDirection: Point = [ny - y, nx - x];
+            const directionChangeCost = calculateDirectionChangeCost([dy, dx], newDirection);
+            return 1 + directionChangeCost + calculateCost([ny, nx], newDirection);
+        });
+
+        visited.delete(stateKey); // Backtrack
+
+        // Memoize the minimum cost for this state
+        return (memo[stateKey] = Math.min(...costs));
+    };
+
+    // Start the recursion with the initial direction (facing East)
+    return calculateCost(startPoint, [0, 1]);
+}
+
+function main() {
+    const input = readFileStrings(__dirname, "./input.txt");
+    // const input = readFileStrings(__dirname, "./example.txt");
+
+    const grid = input.map(line => line.split(""));
+
+    const cheapestPath = findCheapestPath(grid);
+
+    console.log(cheapestPath);
+}
+
+main();import { readFileStrings } from "../../utils/input.ts";
 
 type Grid = string[][];
 type Point = [number, number];
