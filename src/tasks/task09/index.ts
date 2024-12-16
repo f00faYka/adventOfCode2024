@@ -1,5 +1,5 @@
 import { repeat } from "ramda";
-import { readFileRaw } from "../../utils/input";
+import { readFileRaw } from "../../utils/input.ts";
 
 const buildFiles = (diskRaw: string) => {
     return diskRaw
@@ -14,7 +14,7 @@ const buildSpaces = (diskRaw: string) => {
     return oddChars;
 }
 
-const diskRaw = readFileRaw(__dirname, "./input.txt");
+const diskRaw = await readFileRaw("./input.txt");
 
 const files = buildFiles(diskRaw);
 

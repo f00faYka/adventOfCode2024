@@ -1,5 +1,5 @@
-import { evolve, map, pipe, reduce, sort, split, trim, zipWith, props, apply, add, curry, tap, toPairs } from 'ramda';
-import { readFileStrings } from '../../utils/input';
+import { evolve, map, pipe, reduce, sort, split, trim, zipWith, props, apply, add, curry } from 'ramda';
+import { readFileStrings } from '../../utils/input.ts';
 
 type NumberArrays = {
     left: number[];
@@ -35,8 +35,8 @@ const calculateSum = pipe(
     reduce(add, 0)
 );
 
-const getSum = async (dir: string, filename: string): Promise<number> => {
-    const lines = await readFileStrings(filename);
+const getSum = async (filename: string): Promise<number> => {
+    const lines = (await readFileStrings(filename)) as string[];
     return pipe(
         parseInputIntoArrays,
         getSortedArrays,
@@ -45,7 +45,7 @@ const getSum = async (dir: string, filename: string): Promise<number> => {
 };
 
 const getHash = curry(
-    reduce<number, Record<number, number>>((acc, cur) => ({
+    reduce<number, Record<number, number>>((acc: Record<number, number>, cur: number) => ({
         ...acc,
         [cur]: (acc[cur] ?? 0) + 1,
     }), {})
@@ -61,9 +61,9 @@ const calculateSimilarity = pipe(
     )(left)
 );
 
-const getSimilarityScore = async (dir: string, filename: string): Promise<number> => {
-    const lines = await readFileStrings(filename);
-    return pipe(
+const getSimilarityScore = async (filename: string): Promise<number> => {
+    const lines = (await readFileStrings(filename)) as string[];
+    return pipe<string[], NumberArrays, { left: number[]; right: Record<number, number> }, number>(
         parseInputIntoArrays,
         evolve({
             right: getHash,
@@ -73,16 +73,16 @@ const getSimilarityScore = async (dir: string, filename: string): Promise<number
 }
 
 export const part1 = async (): Promise<number> => {
-    return await getSum("./src/tasks/task01", "./input.txt");
+    return await getSum("./input.txt");
 };
 
 export const part2 = async (): Promise<number> => {
-    return await getSimilarityScore("./src/tasks/task01", "./input.txt");
+    return await getSimilarityScore("./input.txt");
 }
 
 // Для запуска используйте:
-// const main = async () => {
-//     console.log(await part1());
-//     console.log(await part2());
-// }
-// main();
+const main = async () => {
+    console.log(await part1());
+    console.log(await part2());
+}
+main();

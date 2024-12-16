@@ -1,5 +1,4 @@
-import { readFileSync } from "fs"
-import path from "path"
+import { readFileRaw } from "../../utils/input.ts";
 
 type Point = [number, number]
 
@@ -15,7 +14,7 @@ function parsePoint(line: string, isButton = false): Point | Point {
         throw new Error(`Invalid point format: ${line}`)
     }
 
-    const [, xOperator, xValue, yOperator, yValue] = match
+    const [, _xOperator, xValue, _yOperator, yValue] = match
     const x = parseInt(xValue)
     const y = parseInt(yValue)
 
@@ -38,18 +37,17 @@ function parseGameRounds(input: string): GameRound[] {
         const prizeLine = lines[i + 2].replace("Prize: ", "")
 
         rounds.push({
-        buttonA: parsePoint(buttonALine, true) as Point,
-        buttonB: parsePoint(buttonBLine, true) as Point,
-        prize: parsePoint(prizeLine, false) as Point
+            buttonA: parsePoint(buttonALine, true) as Point,
+            buttonB: parsePoint(buttonBLine, true) as Point,
+            prize: parsePoint(prizeLine, false) as Point
         })
     }
 
     return rounds
 }
 
-function readInputFile(filePath: string): GameRound[] {
-    const fullPath = path.join(__dirname, filePath);
-    const fileContent = readFileSync(fullPath, "utf-8");
+async function readInputFile(filePath: string): Promise<GameRound[]> {
+    const fileContent = await readFileRaw(filePath);
     return parseGameRounds(fileContent);
 }
 

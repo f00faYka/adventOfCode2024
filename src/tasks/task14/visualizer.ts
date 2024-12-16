@@ -1,6 +1,4 @@
-import { readFileStrings } from "../../utils/input";
-import * as fs from "fs";
-import * as path from "path";
+import { readFileStrings } from "../../utils/input.ts";
 
 type Point = [number, number];
 
@@ -69,14 +67,15 @@ function drawGrid(robots: Robot[], width: number, height: number): string {
     return grid.map((row) => row.join("")).join("\n");
 }
 
-function visualizeTreeStepsWithGrid(
+async function visualizeTreeStepsWithGrid(
     robots: Robot[],
     width: number,
     height: number,
     maxSteps: number,
     outputPath: string
 ) {
-    fs.writeFileSync(outputPath, "");
+    // Очищаем файл
+    await Deno.writeTextFile(outputPath, "");
 
     let currentRobots = robots;
 
@@ -87,7 +86,8 @@ function visualizeTreeStepsWithGrid(
             stepOutput += gridRepresentation + "\n";
             stepOutput += "=".repeat(50) + "\n";
 
-            fs.appendFileSync(outputPath, stepOutput);
+            // Добавляем новые данные в файл
+            await Deno.writeTextFile(outputPath, stepOutput, { append: true });
             console.log(`Row with 8 consecutive bots found at step ${step}`);
         }
 
@@ -95,21 +95,20 @@ function visualizeTreeStepsWithGrid(
     }
 }
 
-function main() {
-    // const input = readFileStrings(__dirname, "./example.txt");
-    const input = readFileStrings(__dirname, "./input.txt");
+async function main() {
+    const input = await readFileStrings("./input.txt");
     const [width, height] = input[0].split(" ").map(Number);
-    input.shift();
+    const lines = input.slice(1);
 
-    const robots: Robot[] = input.map((line: string) => {
+    const robots: Robot[] = lines.map((line: string) => {
         const [p, v] = line.split(" ")
             .map((s) => parsePoint(s.split("=")[1]));
         return { point: p, velocity: v };
     });
 
-    const outputPath = path.join(__dirname, "visualization_output.txt");
+    const outputPath = "./visualization_output.txt";
     console.log("Starting visualization...");
-    visualizeTreeStepsWithGrid(robots, width, height, 100_000, outputPath);
+    await visualizeTreeStepsWithGrid(robots, width, height, 100_000, outputPath);
     console.log("Visualization complete!");
 }
 

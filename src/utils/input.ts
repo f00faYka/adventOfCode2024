@@ -1,4 +1,4 @@
-import { pipe, split, trim } from 'ramda';
+import { pipe, split, trim } from "ramda";
 
 export const readFileStrings = async (filename: string): Promise<string[]> => {
     const text = await Deno.readTextFile(filename);

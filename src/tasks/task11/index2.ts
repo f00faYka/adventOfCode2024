@@ -1,5 +1,4 @@
-import { readFileSync } from "fs"
-import { join } from "path"
+import { readFileRaw } from "../../utils/input.ts";
 
 function getNextStones(stone: number): number[] {
     if (stone === 0) {
@@ -50,9 +49,9 @@ function solution(input: string): number {
     return totalStones
 }
 
-function main() {
-    const input = readFileSync(join(__dirname, "input.txt"), "utf-8").trim()
+async function main() {
+    const input = await readFileRaw("./input.txt");
     console.log(solution(input))
 }
 
-main()
+main();

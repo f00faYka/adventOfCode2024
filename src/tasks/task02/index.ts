@@ -1,5 +1,5 @@
 import { any, curry, either, filter, length, map, pipe, split, trim, zip } from 'ramda';
-import { readFileStrings } from '../../utils/input';
+import { readFileStrings } from '../../utils/input.ts';
 
 type Pair = [number, number];
 
@@ -9,7 +9,7 @@ const parseLine = pipe(
     map(Number)
 ) as () => number[];
 
-const parseInputIntoArrays = async (dir: string, filename: string): Promise<number[][]> => {
+const parseInputIntoArrays = async (filename: string): Promise<number[][]> => {
     const lines = await readFileStrings(filename);
     return map(parseLine)(lines);
 };
@@ -53,27 +53,26 @@ const isSafeWithDampener = (numbers: number[]): boolean => {
 
 const getSafeReportCount = pipe(
     filter(isSafe),
-    length as (x: any[]) => number,
+    length as (x: number[][]) => number,
 )
 
 const getSafeReportCountWithDampener = pipe(
     filter(isSafeWithDampener),
-    length as (x: any[]) => number,
+    length as (x: number[][]) => number,
 )
 
 export const part1 = async (): Promise<number> => {
-    const arrays = await parseInputIntoArrays("./src/tasks/task02", "./input.txt");
+    const arrays = await parseInputIntoArrays("./input.txt");
     return getSafeReportCount(arrays);
 };
 
 export const part2 = async (): Promise<number> => {
-    const arrays = await parseInputIntoArrays("./src/tasks/task02", "./input.txt");
+    const arrays = await parseInputIntoArrays("./input.txt");
     return getSafeReportCountWithDampener(arrays);
 };
 
-// Для запуска используйте:
-// const main = async () => {
-//     console.log(await part1());
-//     console.log(await part2());
-// }
-// main();
+const main = async () => {
+    console.log(await part1());
+    console.log(await part2());
+}
+main();

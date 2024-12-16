@@ -1,5 +1,5 @@
-import { map, pipe, reduce, sum } from "ramda";
-import { readFileRaw } from "../../utils/input"
+import { map, pipe, sum } from "ramda";
+import { readFileRaw } from "../../utils/input.ts"
 
 type PairsMap = Record<number, number[]>;
 
@@ -34,8 +34,8 @@ function parseRawData(input: string) {
     }
 }
 
-// const rawData = readFileRaw(__dirname, "./example.txt");
-const rawData = readFileRaw(__dirname, "./input.txt");
+// const rawData = await readFileRaw(__dirname, "./example.txt");
+const rawData = await readFileRaw("./input.txt");
 
 // part 1
 const { pairs, groups } = parseRawData(rawData);

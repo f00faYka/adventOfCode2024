@@ -1,4 +1,4 @@
-import { readFileStrings } from "../../utils/input";
+import { readFileStrings } from "../../utils/input.ts";
 
 type Point = [number, number];
 
@@ -62,8 +62,8 @@ function getQuadrantCounts(robots: Robot[], width: number, height: number): numb
     return counts;
 }
 
-// const input = readFileStrings(__dirname, "./example.txt");
-const input = readFileStrings(__dirname, "./input.txt");
+// const input = await readFileStrings("./example.txt");
+const input = await readFileStrings("./input.txt");
 
 const [width, height] = input[0].split(" ").map(Number);
 input.shift();

@@ -1,6 +1,4 @@
-import { readFileStrings } from "../../utils/input";
-import { writeFileSync } from "fs";
-import { join } from "path";
+import { readFileStrings } from "../../utils/input.ts";
 
 type Grid = string[][];
 type Direction = ">" | "<" | "^" | "v";
@@ -58,7 +56,6 @@ const moveRobotHorizontally = (grid: Grid, robot: Point, move: Direction): Point
     const freeSpaceIndex = line.findIndex(cell => cell === ".");
 
     if (freeSpaceIndex === -1) {
-        debugger;
         return robot;
     }
 
@@ -183,8 +180,8 @@ const adjustGridForWiderWarehouse = (grid: Grid): Grid => {
     }).map(line => line.split(""));
 };
 
-const main = () => {
-    const input = readFileStrings(__dirname, "./input.txt");
+const main = async () => {
+    const input = await readFileStrings("./input.txt");
     // const input = readFileStrings(__dirname, "./example.txt");
 
     const blankLineIndex = input.findIndex(line => line.trim() === "");
@@ -205,7 +202,7 @@ const main = () => {
         throw new Error("Robot not found");
     }
 
-    moves.split("").forEach((move, index) => {
+    moves.split("").forEach((move) => {
         robot = moveRobot(grid, robot!, move as Direction);
     });
 

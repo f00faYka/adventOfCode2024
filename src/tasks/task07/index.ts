@@ -1,5 +1,5 @@
 import { filter, map, repeat, split, sum, trim } from 'ramda';
-import { readFileStrings } from '../../utils/input';
+import { readFileStrings } from '../../utils/input.ts';
 
 type Operator = '+' | '*';
 type Equation = [number, number[]];
@@ -69,8 +69,8 @@ const hasSolution = (equation: Equation) => {
     return false;
 };
 
-const input = readFileStrings(__dirname, 'example.txt');
-// const input = readFileStrings(__dirname, 'input.txt');
+const input = await readFileStrings('example.txt');
+// const input = await readFileStrings('input.txt');
 
 const equations: Equation[] = map(parseEquation)(input);
 

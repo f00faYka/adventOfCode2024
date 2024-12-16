@@ -1,6 +1,4 @@
-import { join } from "path";
-import { readFileRaw } from "../../utils/input";
-import { writeFileSync } from "fs";
+import { readFileRaw } from "../../utils/input.ts";
 
 type DiskBlock =
     | { type: "file"; length: number; id: number }
@@ -88,32 +86,31 @@ function calculateChecksum(parsedMap: DiskBlock[]): number {
     return checksum;
 }
 
-function generateFinalArray(parsedMap: DiskBlock[]): string[] {
-    const result: string[] = [];
+// function generateFinalArray(parsedMap: DiskBlock[]): string[] {
+//     const result: string[] = [];
 
-    parsedMap.forEach((block) => {
-        if (block.type === "file") {
-            result.push(...Array(block.length).fill(block.id.toString()));
-        } else if (block.type === "free") {
-            result.push(...Array(block.length).fill("."));
-        }
-    });
+//     parsedMap.forEach((block) => {
+//         if (block.type === "file") {
+//             result.push(...Array(block.length).fill(block.id.toString()));
+//         } else if (block.type === "free") {
+//             result.push(...Array(block.length).fill("."));
+//         }
+//     });
 
-    return result;
-}
+//     return result;
+// }
 
 function main(diskMap: string): number {
     const parsedMap = parseDiskMap(diskMap);
     const compactedMap = moveFiles(parsedMap);
 
-    const finalArray = generateFinalArray(compactedMap);
-    writeFileSync(join(__dirname, "result.txt"), JSON.stringify(finalArray));
+    // const finalArray = generateFinalArray(compactedMap);
 
     return calculateChecksum(compactedMap);
 }
 
-// const diskRaw = readFileRaw(__dirname, "./example.txt");
-const diskRaw = readFileRaw(__dirname, "./input.txt");
+// const diskRaw = await readFileRaw("./example.txt");
+const diskRaw = await readFileRaw("./input.txt");
 
 const result = main(diskRaw.trim());
 console.log(`Checksum: ${result}`);

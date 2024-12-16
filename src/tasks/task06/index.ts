@@ -1,5 +1,5 @@
 import { map, reduce, split } from "ramda";
-import { readFileStrings } from "../../utils/input";
+import { readFileStrings } from "../../utils/input.ts";
 
 type Point = [y: number, x: number];
 
@@ -99,8 +99,8 @@ const findWay = (grid: Grid) => {
 
 // Implementation
 
-const input = readFileStrings(__dirname, 'example.txt');
-// const input = readFileStrings(__dirname, 'input.txt');
+const input = await readFileStrings('example.txt');
+// const input = await readFileStrings('input.txt');
 
 // part 1
 

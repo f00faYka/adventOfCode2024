@@ -1,5 +1,5 @@
-import { readFileStrings } from "../../utils/input";
-import { flatten, filter, map, pipe, split, length, addIndex, reduce, values, unnest } from "ramda";
+import { readFileStrings } from "../../utils/input.ts";
+import { flatten, filter, map, pipe, split, addIndex, reduce, values, unnest } from "ramda";
 
 type Point = [number, number];
 
@@ -108,8 +108,8 @@ const createBuildAllAntiNodes = (gridHeight: number, gridWidth: number) => (pair
     return result;
 };
 
-const lines = readFileStrings(__dirname, "./input.txt");
-// const lines = readFileStrings(__dirname, "./example.txt");
+const lines = await readFileStrings("./input.txt");
+// const lines = await readFileStrings("./example.txt");
 
 const createIsInRange = (width: number, height: number) => ([y, x]: Point) => x >= 0 && x < width && y >= 0 && y < height;
 

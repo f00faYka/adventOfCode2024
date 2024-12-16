@@ -1,6 +1,4 @@
-import { filter, sum } from "ramda";
-import { map } from "ramda";
-import { type GameRound, readInputFile } from "./parser";
+import { type GameRound, readInputFile } from "./parser.ts";
 
 type Point = [number, number];
 
@@ -9,9 +7,9 @@ const isEqual = (a: Point, b: Point) => a[0] === b[0] && a[1] === b[1];
 const COST_A = 3;
 const COST_B = 1;
 
-const getCost = (path: string[]) => {
-    return path.filter(p => p === "A").length * COST_A + path.filter(p => p === "B").length * COST_B;
-}
+// const getCost = (path: string[]) => {
+//     return path.filter(p => p === "A").length * COST_A + path.filter(p => p === "B").length * COST_B;
+// }
 
 const getLowestPath = (round: GameRound) => {
     const [dyA, dxA] = round.buttonA;
@@ -19,9 +17,6 @@ const getLowestPath = (round: GameRound) => {
     const { prize } = round;
 
     const memo = new Map<string, number | null>();
-
-
-    // const path: string[] = [];
 
     function getPathCost(
         [y, x]: Point,
@@ -38,7 +33,6 @@ const getLowestPath = (round: GameRound) => {
         if (memo.has(key)) {
             return memo.get(key)!;
         }
-
 
         const costA = getPathCost([y + dyA, x + dxA]);
         const costB = getPathCost([y + dyB, x + dxB]);
@@ -67,8 +61,6 @@ const solveByKramer = (round: GameRound): number | null => {
     const [dyB, dxB] = round.buttonB;
     const [prizeY, prizeX] = round.prize;
 
-    console.log(round);
-
     const detA = dxA * dyB - dxB * dyA;
 
     if (detA === 0) {
@@ -86,24 +78,20 @@ const solveByKramer = (round: GameRound): number | null => {
     }
 
     const cost = Math.abs(a) * COST_A + Math.abs(b) * COST_B;
-
-    console.log(a, b, cost);
-
     return cost;
 };
 
-const gameRounds = readInputFile("./input.txt");
-// const gameRounds = readInputFile("./example.txt");
-
-console.log(
-    gameRounds
+export const part1 = async (): Promise<number> => {
+    const gameRounds = await readInputFile("./input.txt");
+    return gameRounds
         .map(getLowestPath)
         .filter((cost): cost is number => cost !== null)
-        .reduce((sum, cost) => sum + cost, 0)
-);
+        .reduce((sum, cost) => sum + cost, 0);
+};
 
-console.log(
-    gameRounds
+export const part2 = async (): Promise<number> => {
+    const gameRounds = await readInputFile("./input.txt");
+    return gameRounds
         .map(({ buttonA, buttonB, prize }) => ({
             buttonA,
             buttonB,
@@ -111,8 +99,12 @@ console.log(
         }))
         .map(solveByKramer)
         .filter((cost): cost is number => cost !== null)
-        .reduce((sum, cost) => sum + cost, 0)
-);
+        .reduce((sum, cost) => sum + cost, 0);
+};
 
+const main = async () => {
+    console.log("Part 1:", await part1());
+    console.log("Part 2:", await part2());
+}
 
-// 36525670146415 low
+main();

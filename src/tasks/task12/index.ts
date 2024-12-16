@@ -1,5 +1,5 @@
-import { filter, map, pipe, prop, propEq, split, tap } from "ramda";
-import { readFileStrings } from "../../utils/input";
+import { filter, map, pipe, prop, split } from "ramda";
+import { readFileStrings } from "../../utils/input.ts";
 
 type Grid = string[][];
 type Point = [number, number];
@@ -76,7 +76,7 @@ const createGetNeighbors = (grid: Grid) => ([y, x]: Point) => {
         .filter(([newY, newX]) => grid[y][x] === grid[newY][newX])
 };
 
-const createGetIslandData = (grid: Grid) => (point: Point) => {
+const createGetIslandData = (_grid: Grid) => (point: Point) => {
     const queue: Point[] = [point];
 
     let perimeter = 0;
@@ -225,8 +225,8 @@ const mergeLines = (lines: [Point, Point][]): [Point, Point][] => {
     return result;
 };
 
-// const grid = map(split(""))(readFileStrings(__dirname, "./example.txt"));
-const grid = map(split(""))(readFileStrings(__dirname, "./input.txt"));
+// const grid = map(split(""))(await readFileStrings("./example.txt"));
+const grid = map(split(""))(await readFileStrings("./input.txt"));
 
 let visited: Record<string, boolean> = {};
 const isOutOfRange = createIsOutOfRange(grid);

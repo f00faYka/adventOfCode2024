@@ -1,5 +1,5 @@
 import { map, split } from "ramda";
-import { readFileStrings } from "../../utils/input";
+import { readFileStrings } from "../../utils/input.ts";
 
 type Grid = string[][];
 
@@ -43,8 +43,8 @@ function getWordCount(word: string) {
     };
 }
 
-const lines = readFileStrings("./src/tasks/task04", "./input.txt");
-// const lines = parseInput("./src/tasks/task04", "./example.txt");
+const lines = await readFileStrings("./input.txt");
+// const lines = await parseInput("./example.txt");
 const grid = map(split(""))(lines);
 
 
@@ -71,10 +71,10 @@ function isXmasSign(grid: Grid, y: number, x: number): boolean {
         return false; // Can't form X if A is on the edge
     }
 
-    let topLeft = grid[y-1][x-1];
-    let topRight = grid[y-1][x+1];
-    let bottomLeft = grid[y+1][x-1];
-    let bottomRight = grid[y+1][x+1];
+    const topLeft = grid[y-1][x-1];
+    const topRight = grid[y-1][x+1];
+    const bottomLeft = grid[y+1][x-1];
+    const bottomRight = grid[y+1][x+1];
 
     // Check diagonal \ then diagonal /
     return (

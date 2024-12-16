@@ -1,4 +1,4 @@
-import { readFileStrings } from "../../utils/input";
+import { readFileStrings } from "../../utils/input.ts";
 
 type Grid = string[][];
 type Direction = ">" | "<" | "^" | "v";
@@ -98,8 +98,8 @@ const sumBoxGPS = (grid: Grid): number => {
     return sum;
 };
 
-const main = () => {
-    const input = readFileStrings(__dirname, "./input.txt");
+const main = async () => {
+    const input = await readFileStrings("./input.txt");
     // const input = readFileStrings(__dirname, "./example.txt");
 
     const blankLineIndex = input.findIndex(line => line.trim() === "");
