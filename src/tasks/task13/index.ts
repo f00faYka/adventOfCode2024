@@ -54,7 +54,7 @@ const getLowestPath = (round: GameRound) => {
     return getPathCost([0, 0]);
 }
 
-const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+// const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
 
 const solveByKramer = (round: GameRound): number | null => {
     const [dyA, dxA] = round.buttonA;

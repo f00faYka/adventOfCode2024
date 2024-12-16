@@ -33,7 +33,7 @@ function hasConsecutiveBots(robots: Robot[], consecutiveCount: number): boolean 
     });
 
     // Проверяем каждую строку
-    for (const [y, xs] of rows) {
+    for (const [_y, xs] of rows) {
         // Сортируем координаты X
         xs.sort((a, b) => a - b);
 
