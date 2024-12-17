@@ -1,6 +1,11 @@
 {
   "imports": {
     "std/": "https://deno.land/std@0.208.0/",
-    "ramda": "npm:@types/ramda@0.29.9"
+    "ramda": "npm:ramda@0.29.1"
+  },
+  "tasks": {
+    "start": "deno run --allow-read --unstable-detect-cjs",
+    "watch": "deno run --watch --allow-read --unstable-detect-cjs",
+    "debug": "deno run --inspect-brk --allow-read --unstable-detect-cjs"
   }
 }
